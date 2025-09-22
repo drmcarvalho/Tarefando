@@ -30,7 +30,7 @@ namespace Tarefando.Api.Business.TaskManager
                     IsCaceled = task.IsCaceled,
                     CreatedAt = task.CreatedAt,
                     UpdatedAt = task.UpdatedAt,
-                    Type = task.TaskType
+                    TaskType = task.TaskType
                 }
             );            
             _memoryCache.Set(cacheKey, collection, TimeSpan.FromMinutes(5));            
@@ -59,7 +59,7 @@ namespace Tarefando.Api.Business.TaskManager
                         IsCaceled = x.IsCaceled,
                         IsCompleted = x.IsCompleted,
                         Title = x.Title,
-                        Type = x.TaskType,
+                        TaskType = x.TaskType,
                         UpdatedAt = x.UpdatedAt
                     })
                 }

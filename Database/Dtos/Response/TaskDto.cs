@@ -11,6 +11,6 @@ namespace Tarefando.Api.Database.Dtos.Response
         public bool? IsCaceled { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public ETaskType? Type { get; set; }
+        public ETaskType? TaskType { get; set; }
     }
 }
