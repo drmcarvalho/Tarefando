@@ -21,6 +21,7 @@ namespace Tarefando.Api.Business.TaskManager
                 return Result.Ok(cachedTasks);
             }
             var collection = _taskRepository.Criteria(q)
+                .OrderBy(o => o.TaskType)
                 .Select(task => new TaskDto {
                     Id = task.Id,
                     Title = task.Title,
@@ -33,6 +34,37 @@ namespace Tarefando.Api.Business.TaskManager
                 }
             );            
             _memoryCache.Set(cacheKey, collection, TimeSpan.FromMinutes(5));            
+            return Result.Ok(collection);
+        }
+
+        public Result<IEnumerable<TaskGroupedByDayDto>> GroupedByDayCriteria(string? q = null)
+        {
+            var cacheKey = $"{nameof(ListTasks)}:{nameof(GroupedByDayCriteria)}:{q}";
+            _logger.LogInformation("Listing all tasks grouped by day");
+            if (_memoryCache.TryGetValue(cacheKey, out IEnumerable<TaskGroupedByDayDto>? cachedTasks) && cachedTasks is not null)
+            {
+                _logger.LogInformation("Returning cached grouped tasks");
+                return Result.Ok(cachedTasks);
+            }
+            var collection = _taskRepository.Criteria(q)
+                .OrderBy(o => o.TaskType)
+                .GroupBy(g => g.CreatedAt.Date, (day, g) => new TaskGroupedByDayDto
+                {
+                    Day = day,
+                    Tasks = g.Select(x => new TaskDto
+                    {
+                        Id = x.Id,
+                        CreatedAt = x.CreatedAt,
+                        Description = x.Description,
+                        IsCaceled = x.IsCaceled,
+                        IsCompleted = x.IsCompleted,
+                        Title = x.Title,
+                        Type = x.TaskType,
+                        UpdatedAt = x.UpdatedAt
+                    })
+                }
+            );
+            _memoryCache.Set(cacheKey, collection, TimeSpan.FromMinutes(5));
             return Result.Ok(collection);
         }
     }

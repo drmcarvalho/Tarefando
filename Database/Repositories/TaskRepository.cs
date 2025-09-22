@@ -9,7 +9,7 @@ namespace Tarefando.Api.Database.Repositories
         private readonly ILiteDatabase _database = database;
         private const string CollectionName = "tasks";
 
-        public IEnumerable<MyTask> Criteria(string? q = null) => _database.GetCollection<MyTask>(CollectionName).Query().Where(x => x.Title.Contains(q!) || (x.Description != null && x.Description.Contains(q))).ToEnumerable();
+        public IEnumerable<MyTask> Criteria(string? q = null) => _database.GetCollection<MyTask>(CollectionName).Query().Where(x => x.Title.Contains(q!) || (x.Description != null && x.Description.Contains(q!))).ToEnumerable();
 
         public void Create(MyTask task)
         {
@@ -25,6 +25,6 @@ namespace Tarefando.Api.Database.Repositories
         {
             var collection = _database.GetCollection<MyTask>(CollectionName);
             collection.Update(task.Id, task);            
-        }        
+        }
     }
 }

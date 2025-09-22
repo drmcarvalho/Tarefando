@@ -15,6 +15,13 @@ namespace Tarefando.Api.Controllers
             return Ok(resultTasks.ValueOrDefault);
         }
 
+        [HttpGet("groupedByDay/criteria")]
+        public IActionResult ListTasksGroupedByDay([FromServices] ListTasks listAllTasks, [FromQuery] string? q = null)
+        {
+            var resultTasks = listAllTasks.GroupedByDayCriteria(q);
+            return Ok(resultTasks.ValueOrDefault);
+        }
+
         [HttpPost]
         public IActionResult CreateTask([FromServices] NewTask newTask, [FromBody] NewTaskDto dto)
         {
