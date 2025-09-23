@@ -11,14 +11,14 @@ namespace Tarefando.Api.Controllers
     public class TaskController : ControllerBase
     {
         [HttpGet("criteria")]
-        public IActionResult ListTasks([FromServices] ListTasks listAllTasks, [FromQuery] string? q = null, [FromQuery] bool grouped = false, [FromQuery] bool? isCanceled = null, [FromQuery] bool? isCompleted = null, [FromQuery] ETaskType? taskType = null, [FromQuery] bool noCache = false)
+        public IActionResult ListTasks([FromServices] ListTasks listTasks, [FromQuery] string? q = null, [FromQuery] bool grouped = false, [FromQuery] bool? isCanceled = null, [FromQuery] bool? isCompleted = null, [FromQuery] ETaskType? taskType = null, [FromQuery] bool noCache = false)
         {
             if (grouped)
             {
-                var resultTasksGrouped = listAllTasks.GroupedByDayCriteria(q, isCanceled, isCompleted, taskType, noCache);
+                var resultTasksGrouped = listTasks.GroupedByDayCriteria(q, isCanceled, isCompleted, taskType, noCache);
                 return Ok(resultTasksGrouped.ValueOrDefault);
             }
-            var resultTasks = listAllTasks.Criteria(q, isCanceled, isCompleted, taskType, noCache);
+            var resultTasks = listTasks.Criteria(q, isCanceled, isCompleted, taskType, noCache);
             return Ok(resultTasks.ValueOrDefault);
         }
 
