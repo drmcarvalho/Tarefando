@@ -9,16 +9,14 @@ namespace Tarefando.Api.Controllers
     public class TaskController : ControllerBase
     {
         [HttpGet("criteria")]
-        public IActionResult ListTasks([FromServices] ListTasks listAllTasks, [FromQuery] string? q = null)
+        public IActionResult ListTasks([FromServices] ListTasks listAllTasks, [FromQuery] string? q = null, [FromQuery] bool grouped = false)
         {
+            if (grouped)
+            {
+                var resultTasksGrouped = listAllTasks.GroupedByDayCriteria(q);
+                return Ok(resultTasksGrouped.ValueOrDefault);
+            }
             var resultTasks = listAllTasks.Criteria(q);
-            return Ok(resultTasks.ValueOrDefault);
-        }
-
-        [HttpGet("groupedByDay/criteria")]
-        public IActionResult ListTasksGroupedByDay([FromServices] ListTasks listAllTasks, [FromQuery] string? q = null)
-        {
-            var resultTasks = listAllTasks.GroupedByDayCriteria(q);
             return Ok(resultTasks.ValueOrDefault);
         }
 
