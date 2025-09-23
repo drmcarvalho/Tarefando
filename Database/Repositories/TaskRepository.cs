@@ -9,7 +9,8 @@ namespace Tarefando.Api.Database.Repositories
         private readonly ILiteDatabase _database = database;
         private const string CollectionName = "tasks";
 
-        public IEnumerable<MyTask> Criteria(string? q = null) => _database.GetCollection<MyTask>(CollectionName).Query().Where(x => x.Title.Contains(q!) || (x.Description != null && x.Description.Contains(q!))).ToEnumerable();
+        public IEnumerable<MyTask> Criteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null) => 
+            _database.GetCollection<MyTask>(CollectionName).Query().Where(x => (x.Title.Contains(q!) || (x.Description != null && x.Description.Contains(q!))) && (isCanceled == null || x.IsCaceled == isCanceled.Value) && (isCompleted == null || x.IsCompleted == isCompleted)).ToEnumerable();
 
         public void Create(MyTask task)
         {
