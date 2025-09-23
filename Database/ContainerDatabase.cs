@@ -8,7 +8,7 @@ namespace Tarefando.Api.Database
     {
         public static void AddDatabase(this IServiceCollection services)
         {
-            BsonMapper.Global.EnumAsInteger = true;            
+            BsonMapper.Global.EnumAsInteger = true;
             services.AddSingleton<ILiteDatabase>(_ => new LiteDatabase("tarefandodb.db"));
             services.AddScoped<ITaskRepository, TaskRepository>();
         }
