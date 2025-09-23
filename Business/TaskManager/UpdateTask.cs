@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Tarefando.Api.Database.Dtos.Payload;
 using Tarefando.Api.Database.Repositories.Interfaces;
+using Tarefando.Api.Errors;
 
 namespace Tarefando.Api.Business.TaskManager
 {
@@ -18,7 +19,7 @@ namespace Tarefando.Api.Business.TaskManager
             if (task is null)
             {
                 _logger.LogWarning("Task {TaskId} not found", taskId);
-                return Result.Fail("Task not found");
+                return Result.Fail(new TaskNotFoundError(taskId));
             }
             task.IsCompleted = true;
             task.UpdatedAt = DateTime.UtcNow;
@@ -35,7 +36,7 @@ namespace Tarefando.Api.Business.TaskManager
             if (task is null)
             {
                 _logger.LogWarning("Task {TaskId} not found", taskId);
-                return Result.Fail("Task not found");
+                return Result.Fail(new TaskNotFoundError(taskId));
             }
             task.IsCaceled = true;
             task.UpdatedAt = DateTime.UtcNow;
@@ -52,7 +53,7 @@ namespace Tarefando.Api.Business.TaskManager
             if (task is null)
             {
                 _logger.LogWarning("Task {TaskId} not found", taskId);
-                return Result.Fail("Task not found");
+                return Result.Fail(new TaskNotFoundError(taskId));
             }
             if (!string.IsNullOrWhiteSpace(dto.Title))
             {

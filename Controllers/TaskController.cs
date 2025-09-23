@@ -2,6 +2,7 @@
 using Tarefando.Api.Business.TaskManager;
 using Tarefando.Api.Database.Dtos.Payload;
 using Tarefando.Api.Database.Enums;
+using Tarefando.Api.Errors;
 
 namespace Tarefando.Api.Controllers
 {
@@ -38,6 +39,10 @@ namespace Tarefando.Api.Controllers
             var result = updateTask.Update(taskId, dto);
             if (result.IsFailed)
             {
+                if (result.Errors.Any(e => e is TaskNotFoundError))
+                {
+                    return NotFound(result.Errors.Select(e => new { e.Message, e.Metadata, Reasons = e.Reasons.Select(r => e.Message) } ));
+                }
                 return BadRequest(result.Errors);
             }
             return NoContent();
@@ -49,6 +54,10 @@ namespace Tarefando.Api.Controllers
             var result = updateTask.MarkAsCompleted(taskId);
             if (result.IsFailed)
             {
+                if (result.Errors.Any(e => e is TaskNotFoundError))
+                {
+                    return NotFound(result.Errors.Select(e => new { e.Message, e.Metadata, Reasons = e.Reasons.Select(r => e.Message) }));
+                }
                 return BadRequest(result.Errors);
             }
             return NoContent();
@@ -60,6 +69,10 @@ namespace Tarefando.Api.Controllers
             var result = updateTask.MarkAsCanceled(taskId);
             if (result.IsFailed)
             {
+                if (result.Errors.Any(e => e is TaskNotFoundError))
+                {
+                    return NotFound(result.Errors.Select(e => new { e.Message, e.Metadata, Reasons = e.Reasons.Select(r => e.Message) }));
+                }
                 return BadRequest(result.Errors);
             }
             return NoContent();
