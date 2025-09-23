@@ -46,7 +46,7 @@ namespace Tarefando.Api.Business.TaskManager
                 _logger.LogInformation("Returning cached grouped tasks");
                 return Result.Ok(cachedTasks);
             }
-            var collection = _taskRepository.Criteria(q)
+            var collection = _taskRepository.Criteria(q, isCanceled, isCompleted)
                 .OrderBy(o => o.TaskType)
                 .GroupBy(g => g.CreatedAt.Date, (day, g) => new TaskGroupedByDayDto
                 {
