@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tarefando.Api.Business.TaskManager;
 using Tarefando.Api.Database.Dtos.Payload;
+using Tarefando.Api.Database.Enums;
 
 namespace Tarefando.Api.Controllers
 {
@@ -9,14 +10,14 @@ namespace Tarefando.Api.Controllers
     public class TaskController : ControllerBase
     {
         [HttpGet("criteria")]
-        public IActionResult ListTasks([FromServices] ListTasks listAllTasks, [FromQuery] string? q = null, [FromQuery] bool grouped = false, [FromQuery] bool? isCanceled = null, [FromQuery] bool? isCompleted = null)
+        public IActionResult ListTasks([FromServices] ListTasks listAllTasks, [FromQuery] string? q = null, [FromQuery] bool grouped = false, [FromQuery] bool? isCanceled = null, [FromQuery] bool? isCompleted = null, [FromQuery] ETaskType? taskType = null, [FromQuery] bool noCache = false)
         {
             if (grouped)
             {
-                var resultTasksGrouped = listAllTasks.GroupedByDayCriteria(q, isCanceled, isCompleted);
+                var resultTasksGrouped = listAllTasks.GroupedByDayCriteria(q, isCanceled, isCompleted, taskType, noCache);
                 return Ok(resultTasksGrouped.ValueOrDefault);
             }
-            var resultTasks = listAllTasks.Criteria(q, isCanceled, isCompleted);
+            var resultTasks = listAllTasks.Criteria(q, isCanceled, isCompleted, taskType, noCache);
             return Ok(resultTasks.ValueOrDefault);
         }
 

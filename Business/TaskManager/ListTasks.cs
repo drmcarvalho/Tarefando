@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using Microsoft.Extensions.Caching.Memory;
 using Tarefando.Api.Database.Dtos.Response;
+using Tarefando.Api.Database.Enums;
 using Tarefando.Api.Database.Repositories.Interfaces;
 
 namespace Tarefando.Api.Business.TaskManager
@@ -11,16 +12,16 @@ namespace Tarefando.Api.Business.TaskManager
         private readonly ITaskRepository _taskRepository = taskRepository;
         private readonly IMemoryCache _memoryCache = memoryCache;        
 
-        public Result<IEnumerable<TaskDto>> Criteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null)
+        public Result<IEnumerable<TaskDto>> Criteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null, ETaskType? taskType = null, bool noCache = false)
         {
-            var cacheKey = $"{nameof(ListTasks)}:{nameof(Criteria)}:{q}:{isCanceled}:{isCompleted}";
+            var cacheKey = $"{nameof(ListTasks)}:{nameof(Criteria)}:{q}:{isCanceled}:{isCompleted}:{taskType}";
             _logger.LogInformation("Listing all tasks");
-            if (_memoryCache.TryGetValue(cacheKey, out IEnumerable<TaskDto>? cachedTasks) && cachedTasks is not null)
+            if (!noCache && _memoryCache.TryGetValue(cacheKey, out IEnumerable<TaskDto>? cachedTasks) && cachedTasks is not null)
             {
                 _logger.LogInformation("Returning cached tasks");
                 return Result.Ok(cachedTasks);
             }
-            var collection = _taskRepository.Criteria(q, isCanceled, isCompleted)
+            var collection = _taskRepository.Criteria(q, isCanceled, isCompleted, taskType)
                 .OrderBy(o => o.TaskType)
                 .Select(task => new TaskDto {
                     Id = task.Id,
@@ -37,16 +38,16 @@ namespace Tarefando.Api.Business.TaskManager
             return Result.Ok(collection);
         }
 
-        public Result<IEnumerable<TaskGroupedByDayDto>> GroupedByDayCriteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null)
+        public Result<IEnumerable<TaskGroupedByDayDto>> GroupedByDayCriteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null, ETaskType? taskType = null, bool noCache = false)
         {
-            var cacheKey = $"{nameof(ListTasks)}:{nameof(GroupedByDayCriteria)}:{q}:{isCanceled}:{isCompleted}";
+            var cacheKey = $"{nameof(ListTasks)}:{nameof(GroupedByDayCriteria)}:{q}:{isCanceled}:{isCompleted}:{taskType}";
             _logger.LogInformation("Listing all tasks grouped by day");
-            if (_memoryCache.TryGetValue(cacheKey, out IEnumerable<TaskGroupedByDayDto>? cachedTasks) && cachedTasks is not null)
+            if (!noCache && _memoryCache.TryGetValue(cacheKey, out IEnumerable<TaskGroupedByDayDto>? cachedTasks) && cachedTasks is not null)
             {
                 _logger.LogInformation("Returning cached grouped tasks");
                 return Result.Ok(cachedTasks);
             }
-            var collection = _taskRepository.Criteria(q, isCanceled, isCompleted)
+            var collection = _taskRepository.Criteria(q, isCanceled, isCompleted, taskType)
                 .OrderBy(o => o.TaskType)
                 .GroupBy(g => g.CreatedAt.Date, (day, g) => new TaskGroupedByDayDto
                 {

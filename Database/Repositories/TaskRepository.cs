@@ -1,5 +1,6 @@
 ﻿using LiteDB;
 using Tarefando.Api.Database.Entities;
+using Tarefando.Api.Database.Enums;
 using Tarefando.Api.Database.Repositories.Interfaces;
 
 namespace Tarefando.Api.Database.Repositories
@@ -9,8 +10,13 @@ namespace Tarefando.Api.Database.Repositories
         private readonly ILiteDatabase _database = database;
         private const string CollectionName = "tasks";
 
-        public IEnumerable<MyTask> Criteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null) => 
-            _database.GetCollection<MyTask>(CollectionName).Query().Where(x => (x.Title.Contains(q!) || (x.Description != null && x.Description.Contains(q!))) && (isCanceled == null || x.IsCaceled == isCanceled.Value) && (isCompleted == null || x.IsCompleted == isCompleted)).ToEnumerable();
+        public IEnumerable<MyTask> Criteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null, ETaskType? taskType = null) =>                    
+            _database.GetCollection<MyTask>(CollectionName).Query().Where(x =>
+                    (q == null || x.Title.Contains(q) || (x.Description != null && x.Description.Contains(q))) &&
+                    (isCanceled == null || x.IsCaceled == isCanceled.Value) &&
+                    (isCompleted == null || x.IsCompleted == isCompleted.Value) &&
+                    (taskType == null || x.TaskType == taskType.Value)
+                ).ToEnumerable();
 
         public void Create(MyTask task)
         {
@@ -20,7 +26,8 @@ namespace Tarefando.Api.Database.Repositories
             collection.Insert(task);
         }
 
-        public MyTask? GetById(int id) => _database.GetCollection<MyTask>(CollectionName).Query().Where(x => x.Id == id).FirstOrDefault();
+        public MyTask? GetById(int id) => 
+            _database.GetCollection<MyTask>(CollectionName).Query().Where(x => x.Id == id).FirstOrDefault();
 
         public void Update(MyTask task)
         {

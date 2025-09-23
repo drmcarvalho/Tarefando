@@ -2,9 +2,9 @@
 {
     public enum ETaskType
     {
-        Normal = 1,
-        TeamAlignment = 2,
         Urgent = 0, // High priority for ordering
+        Normal = 1,
+        TeamAlignment = 2,        
         Training = 3,
         Administrative = 4
     }
