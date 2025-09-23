@@ -23,6 +23,10 @@ namespace Tarefando.Api.Database.Repositories
             var collection = _database.GetCollection<MyTask>(CollectionName);
             collection.EnsureIndex(x => x.Title);
             collection.EnsureIndex(x => x.Description);
+            collection.EnsureIndex(x => x.IsCaceled);
+            collection.EnsureIndex(x => x.IsCompleted);
+            collection.EnsureIndex(x => x.TaskType);
+            collection.EnsureIndex(x => x.CreatedAt);            
             collection.Insert(task);
         }
 
