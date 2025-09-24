@@ -86,7 +86,7 @@ namespace Tarefando.Api.Business.TaskManager
 
         private void InvalidateCache()
         {
-            if (_memoryCache is MemoryCache cache)
+            if (_memoryCache is MemoryCache cache && cache.Keys.Any())
             {
                 cache.Clear();
             }
