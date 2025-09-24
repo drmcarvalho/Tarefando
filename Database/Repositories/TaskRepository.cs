@@ -12,7 +12,7 @@ namespace Tarefando.Api.Database.Repositories
 
         public IEnumerable<MyTask> Criteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null, ETaskType? taskType = null) =>                    
             _database.GetCollection<MyTask>(CollectionName).Query().Where(x =>
-                    (q == null || x.Title.Contains(q) || (x.Description != null && x.Description.Contains(q))) &&
+                    (q == null || x.Title.Contains(q) || q == null || (x.Description != null && x.Description.Contains(q))) &&
                     (isCanceled == null || x.IsCaceled == isCanceled.Value) &&
                     (isCompleted == null || x.IsCompleted == isCompleted.Value) &&
                     (taskType == null || x.TaskType == taskType.Value)
