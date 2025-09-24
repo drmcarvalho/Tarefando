@@ -41,7 +41,7 @@ namespace Tarefando.Api.Controllers
             {
                 if (result.Errors.Any(e => e is TaskNotFoundError))
                 {
-                    return NotFound(result.Errors.Select(e => new { e.Message, e.Metadata, Reasons = e.Reasons.Select(r => e.Message) } ));
+                    return NotFound(FormatErrors(result.Errors));
                 }
                 return BadRequest(result.Errors);
             }
@@ -56,7 +56,7 @@ namespace Tarefando.Api.Controllers
             {
                 if (result.Errors.Any(e => e is TaskNotFoundError))
                 {
-                    return NotFound(result.Errors.Select(e => new { e.Message, e.Metadata, Reasons = e.Reasons.Select(r => e.Message) }));
+                    return NotFound(FormatErrors(result.Errors));
                 }
                 return BadRequest(result.Errors);
             }
@@ -71,11 +71,16 @@ namespace Tarefando.Api.Controllers
             {
                 if (result.Errors.Any(e => e is TaskNotFoundError))
                 {
-                    return NotFound(result.Errors.Select(e => new { e.Message, e.Metadata, Reasons = e.Reasons.Select(r => e.Message) }));
+                    return NotFound(FormatErrors(result.Errors));
                 }
                 return BadRequest(result.Errors);
             }
             return NoContent();
+        }
+
+        static IEnumerable<dynamic> FormatErrors(IReadOnlyList<FluentResults.IError> errors)
+        {
+            return errors.Select(e => new { e.Message, e.Metadata, Reasons = e.Reasons.Select(r => e.Message) });
         }
     }
 }
