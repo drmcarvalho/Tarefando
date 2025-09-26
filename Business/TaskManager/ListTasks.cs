@@ -48,7 +48,7 @@ namespace Tarefando.Api.Business.TaskManager
                 return Result.Ok(cachedTasks);
             }
             var collection = _taskRepository.Criteria(q, isCanceled, isCompleted, taskType)
-                .OrderBy(o => o.TaskType)
+                .OrderByDescending(o => o.CreatedAt)
                 .GroupBy(g => g.CreatedAt.Date, (day, g) => new TaskGroupedByDayDto
                 {
                     Day = day,
@@ -62,7 +62,7 @@ namespace Tarefando.Api.Business.TaskManager
                         Title = x.Title,
                         TaskType = x.TaskType,
                         UpdatedAt = x.UpdatedAt
-                    })
+                    }).OrderBy(t => t.TaskType)
                 }
             );
             _memoryCache.Set(cacheKey, collection, TimeSpan.FromMinutes(5));
