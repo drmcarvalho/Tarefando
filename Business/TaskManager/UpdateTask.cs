@@ -55,6 +55,16 @@ namespace Tarefando.Api.Business.TaskManager
                 _logger.LogWarning("Task {TaskId} not found", taskId);
                 return Result.Fail(new TaskNotFoundError(taskId));
             }
+            if (task.IsCaceled)
+            {
+                _logger.LogWarning("Task {TaskId} is canceled and cannot be updated", taskId);
+                return Result.Fail("Canceled tasks cannot be updated");
+            }
+            if (task.IsCompleted)
+            {
+                _logger.LogWarning("Task {TaskId} is completed and cannot be updated", taskId);
+                return Result.Fail("Completed tasks cannot be updated");
+            }
             if (!string.IsNullOrWhiteSpace(dto.Title))
             {
                 if (dto.Title.Length > 200)
