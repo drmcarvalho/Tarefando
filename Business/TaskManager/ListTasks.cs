@@ -38,6 +38,30 @@ namespace Tarefando.Api.Business.TaskManager
             return Result.Ok(collection);
         }
 
+        public Result<TaskDto> ById(int id)
+        {
+            _logger.LogInformation("Getting task by id {Id}", id);
+            var task = _taskRepository.GetById(id);
+            if (task is null)
+            {
+                _logger.LogWarning("Task with id {Id} not found", id);
+                return Result.Fail(new Errors.TaskNotFoundError(id));
+            }
+            var taskDto = new TaskDto
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                IsCompleted = task.IsCompleted,
+                IsCaceled = task.IsCaceled,
+                CreatedAt = task.CreatedAt,
+                UpdatedAt = task.UpdatedAt,
+                TaskType = task.TaskType
+            };
+            _logger.LogInformation("Task with id {Id} found", id);
+            return Result.Ok(taskDto);
+        }
+
         public Result<IEnumerable<TaskGroupedByDayDto>> GroupedByDayCriteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null, ETaskType? taskType = null, bool noCache = false)
         {
             var cacheKey = $"{nameof(ListTasks)}:{nameof(GroupedByDayCriteria)}:{q}:{isCanceled}:{isCompleted}:{taskType}";

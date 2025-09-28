@@ -22,6 +22,21 @@ namespace Tarefando.Api.Controllers
             return Ok(resultTasks.ValueOrDefault);
         }
 
+        [HttpGet("{taskId}")]
+        public IActionResult GetTaskById([FromServices] ListTasks listTasks, int taskId, [FromQuery] bool noCache = false)
+        {
+            var result = listTasks.ById(taskId);
+            if (result.IsFailed)
+            {
+                if (result.Errors.Any(e => e is TaskNotFoundError))
+                {
+                    return NotFound(FormatErrors(result.Errors));
+                }
+                return BadRequest(FormatErrors(result.Errors));
+            }
+            return Ok(result.ValueOrDefault);
+        }
+
         [HttpPost]
         public IActionResult CreateTask([FromServices] NewTask newTask, [FromBody] NewTaskDto dto)
         {

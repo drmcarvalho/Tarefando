@@ -12,5 +12,7 @@ namespace Tarefando.Api.Database.Dtos.Response
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public ETaskType? TaskType { get; set; }
+        public string? TaskTypeString { get => TaskTypeToString(TaskType); }
+        public static string? TaskTypeToString(ETaskType? taskType) => taskType?.ToFriendlyString();
     }
 }
