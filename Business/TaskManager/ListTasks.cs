@@ -22,12 +22,11 @@ namespace Tarefando.Api.Business.TaskManager
                 return Result.Ok(cachedTasks);
             }
             var collection = _taskRepository.Criteria(q, isCanceled, isCompleted, taskType)
-                .OrderBy(t => t.TaskType)
-                .ThenByDescending(t => t.CreatedAt)
-                .ThenByDescending(t => !t.IsCaceled || !t.IsCompleted)
-                .ThenByDescending(t => !t.IsCaceled)
-                .ThenByDescending(t => !t.IsCompleted)
-                .Select(task => new TaskDto {
+                .SkipWhile(predicate: t => t.IsCaceled)
+                .OrderByDescending(t => t.CreatedAt)
+                .ThenBy(t => t.TaskType)
+                .Select(task => new TaskDto
+                {
                     Id = task.Id,
                     Title = task.Title,
                     Description = task.Description,
@@ -37,7 +36,7 @@ namespace Tarefando.Api.Business.TaskManager
                     UpdatedAt = task.UpdatedAt,
                     TaskType = task.TaskType
                 }
-            );            
+            );
             _memoryCache.Set(cacheKey, collection, TimeSpan.FromMinutes(5));            
             return Result.Ok(collection);
         }
@@ -91,10 +90,8 @@ namespace Tarefando.Api.Business.TaskManager
                         TaskType = x.TaskType,
                         UpdatedAt = x.UpdatedAt
                     })
+                    .SkipWhile(predicate: t => t.IsCaceled)
                     .OrderBy(t => t.TaskType)
-                    .ThenByDescending(t => !t.IsCaceled || !t.IsCompleted)
-                    .ThenByDescending(t => !t.IsCaceled)
-                    .ThenByDescending(t => !t.IsCompleted)
                 }
             );
             _memoryCache.Set(cacheKey, collection, TimeSpan.FromMinutes(5));
