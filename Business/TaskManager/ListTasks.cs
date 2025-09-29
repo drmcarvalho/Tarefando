@@ -91,8 +91,8 @@ namespace Tarefando.Api.Business.TaskManager
                         UpdatedAt = x.UpdatedAt
                     })
                     .OrderBy(t => t.TaskType)
-                    .ThenByDescending(t => t.IsCaceled || t.IsCompleted)
-                    .ThenByDescending(t => t.IsCaceled)
+                    .ThenByDescending(t => !t.IsCaceled || !t.IsCompleted)
+                    .ThenByDescending(t => !t.IsCaceled)
                 }
             );
             _memoryCache.Set(cacheKey, collection, TimeSpan.FromMinutes(5));
