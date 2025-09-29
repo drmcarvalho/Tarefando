@@ -22,9 +22,10 @@ namespace Tarefando.Api.Business.TaskManager
                 return Result.Ok(cachedTasks);
             }
             var collection = _taskRepository.Criteria(q, isCanceled, isCompleted, taskType)
-                .OrderBy(o => o.IsCaceled || o.IsCompleted)
-                .ThenBy(o => o.TaskType)
-                .ThenBy(o => o.IsCaceled)
+                .OrderBy(t => t.TaskType)
+                .ThenByDescending(t => t.CreatedAt)
+                .ThenByDescending(t => !t.IsCaceled || !t.IsCompleted)
+                .ThenByDescending(t => !t.IsCaceled)
                 .Select(task => new TaskDto {
                     Id = task.Id,
                     Title = task.Title,
@@ -89,9 +90,9 @@ namespace Tarefando.Api.Business.TaskManager
                         TaskType = x.TaskType,
                         UpdatedAt = x.UpdatedAt
                     })
-                    .OrderBy(t => t.IsCaceled || t.IsCompleted)
-                    .ThenBy(t => t.TaskType)
-                    .ThenBy(t => t.IsCaceled)
+                    .OrderBy(t => t.TaskType)
+                    .ThenByDescending(t => t.IsCaceled || t.IsCompleted)
+                    .ThenByDescending(t => t.IsCaceled)
                 }
             );
             _memoryCache.Set(cacheKey, collection, TimeSpan.FromMinutes(5));
