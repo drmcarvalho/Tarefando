@@ -26,6 +26,7 @@ namespace Tarefando.Api.Business.TaskManager
                 .ThenByDescending(t => t.CreatedAt)
                 .ThenByDescending(t => !t.IsCaceled || !t.IsCompleted)
                 .ThenByDescending(t => !t.IsCaceled)
+                .ThenByDescending(t => !t.IsCompleted)
                 .Select(task => new TaskDto {
                     Id = task.Id,
                     Title = task.Title,
@@ -93,6 +94,7 @@ namespace Tarefando.Api.Business.TaskManager
                     .OrderBy(t => t.TaskType)
                     .ThenByDescending(t => !t.IsCaceled || !t.IsCompleted)
                     .ThenByDescending(t => !t.IsCaceled)
+                    .ThenByDescending(t => !t.IsCompleted)
                 }
             );
             _memoryCache.Set(cacheKey, collection, TimeSpan.FromMinutes(5));
