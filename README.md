@@ -30,4 +30,5 @@ Run the application:
 ```
 dotnet run
 ```
-Access the application at `https://localhost:7222`
+
+Documentation is available at `https://localhost:7222/openapi/v1.json`
