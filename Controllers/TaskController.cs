@@ -26,13 +26,9 @@ namespace Tarefando.Api.Controllers
         public IActionResult GetTaskById([FromServices] ListTasks listTasks, int taskId, [FromQuery] bool noCache = false)
         {
             var result = listTasks.ById(taskId);
-            if (result.IsFailed)
-            {
-                if (result.Errors.Any(e => e is TaskNotFoundError))
-                {
-                    return NotFound(FormatErrors(result.Errors));
-                }
-                return BadRequest(FormatErrors(result.Errors));
+            if (result.IsFailed && result.Errors.Any(e => e is TaskNotFoundError))
+            {                
+                return NotFound(FormatErrors(result.Errors));                                
             }
             return Ok(result.ValueOrDefault);
         }
