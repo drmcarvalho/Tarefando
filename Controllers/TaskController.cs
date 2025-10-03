@@ -8,7 +8,7 @@ namespace Tarefando.Api.Controllers
 {
     [Route("api/tasks")]
     [ApiController]
-    public class TaskController : ControllerBase
+    public class TaskController : BaseController
     {
         [HttpGet("criteria")]
         public IActionResult ListTasks([FromServices] ListTasks listTasks, [FromQuery] string? q = null, [FromQuery] bool grouped = false, [FromQuery] bool? isCanceled = null, [FromQuery] bool? isCompleted = null, [FromQuery] ETaskType? taskType = null, [FromQuery] bool noCache = false)
@@ -91,11 +91,6 @@ namespace Tarefando.Api.Controllers
                 return BadRequest(result.Errors);
             }
             return NoContent();
-        }
-
-        static IEnumerable<dynamic> FormatErrors(IReadOnlyList<FluentResults.IError> errors)
-        {
-            return errors.Select(e => new { e.Message, e.Metadata, Reasons = e.Reasons.Select(r => e.Message) });
-        }
+        }        
     }
 }
