@@ -21,8 +21,7 @@ namespace Tarefando.Api.Business.TaskManager
                 _logger.LogInformation("Returning cached tasks");
                 return Result.Ok(cachedTasks);
             }
-            var collection = _taskRepository.Criteria(q, isCanceled, isCompleted, taskType)
-                .SkipWhile(predicate: t => t.IsCaceled)
+            var collection = _taskRepository.Criteria(q, isCanceled, isCompleted, taskType)                
                 .OrderByDescending(t => t.CreatedAt)
                 .ThenBy(t => t.TaskType)
                 .Select(task => new TaskDto
@@ -89,8 +88,7 @@ namespace Tarefando.Api.Business.TaskManager
                         Title = x.Title,
                         TaskType = x.TaskType,
                         UpdatedAt = x.UpdatedAt
-                    })
-                    .SkipWhile(predicate: t => t.IsCaceled)
+                    })                    
                     .OrderBy(t => t.TaskType)
                 }
             );
