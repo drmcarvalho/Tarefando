@@ -11,7 +11,7 @@ namespace Tarefando.Api.Controllers
     public class TaskController : BaseController
     {
         [HttpGet("criteria")]
-        public IActionResult ListTasks([FromServices] ListTasks listTasks, [FromQuery] string? q = null, [FromQuery] bool grouped = false, [FromQuery] bool? isCanceled = null, [FromQuery] bool? isCompleted = null, [FromQuery] ETaskType? taskType = null, [FromQuery] bool noCache = false)
+        public IActionResult ListTasks([FromServices] MyTasks listTasks, [FromQuery] string? q = null, [FromQuery] bool grouped = false, [FromQuery] bool? isCanceled = null, [FromQuery] bool? isCompleted = null, [FromQuery] ETaskType? taskType = null, [FromQuery] bool noCache = false)
         {
             if (grouped)
             {
@@ -23,14 +23,14 @@ namespace Tarefando.Api.Controllers
         }
 
         [HttpGet("count-pending")]
-        public IActionResult CountPendingTasks([FromServices] ListTasks listTasks, [FromQuery] bool noCache = false)
+        public IActionResult CountPendingTasks([FromServices] MyTasks listTasks, [FromQuery] bool noCache = false)
         {
             var result = listTasks.CountPendingTasks();
             return Ok(result.ValueOrDefault);
         }
 
         [HttpGet("{taskId}")]
-        public IActionResult GetTaskById([FromServices] ListTasks listTasks, int taskId, [FromQuery] bool noCache = false)
+        public IActionResult GetTaskById([FromServices] MyTasks listTasks, int taskId, [FromQuery] bool noCache = false)
         {
             var result = listTasks.ById(taskId);
             if (result.IsFailed && result.Errors.Any(e => e is TaskNotFoundError))
