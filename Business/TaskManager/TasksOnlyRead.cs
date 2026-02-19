@@ -6,15 +6,15 @@ using Tarefando.Api.Database.Repositories.Interfaces;
 
 namespace Tarefando.Api.Business.TaskManager
 {
-    public sealed class MyTasks(ILogger<MyTasks> logger, ITaskRepository taskRepository, IMemoryCache memoryCache)
+    public sealed class TasksOnlyRead(ILogger<TasksOnlyRead> logger, ITaskRepository taskRepository, IMemoryCache memoryCache)
     {
-        private readonly ILogger<MyTasks> _logger = logger;
+        private readonly ILogger<TasksOnlyRead> _logger = logger;
         private readonly ITaskRepository _taskRepository = taskRepository;
         private readonly IMemoryCache _memoryCache = memoryCache;        
 
         public Result<IEnumerable<TaskDto>> Criteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null, ETaskType? taskType = null, bool noCache = false)
         {
-            var cacheKey = $"{nameof(MyTasks)}:{nameof(Criteria)}:{q}:{isCanceled}:{isCompleted}:{taskType}";
+            var cacheKey = $"{nameof(TasksOnlyRead)}:{nameof(Criteria)}:{q}:{isCanceled}:{isCompleted}:{taskType}";
             _logger.LogInformation("Listing all tasks");
             if (!noCache && _memoryCache.TryGetValue(cacheKey, out IEnumerable<TaskDto>? cachedTasks) && cachedTasks is not null)
             {
@@ -72,7 +72,7 @@ namespace Tarefando.Api.Business.TaskManager
 
         public Result<IEnumerable<TaskGroupedByDayDto>> GroupedByDayCriteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null, ETaskType? taskType = null, bool noCache = false)
         {
-            var cacheKey = $"{nameof(MyTasks)}:{nameof(GroupedByDayCriteria)}:{q}:{isCanceled}:{isCompleted}:{taskType}";
+            var cacheKey = $"{nameof(TasksOnlyRead)}:{nameof(GroupedByDayCriteria)}:{q}:{isCanceled}:{isCompleted}:{taskType}";
             _logger.LogInformation("Listing all tasks grouped by day");
             if (!noCache && _memoryCache.TryGetValue(cacheKey, out IEnumerable<TaskGroupedByDayDto>? cachedTasks) && cachedTasks is not null)
             {

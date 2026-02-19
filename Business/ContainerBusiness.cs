@@ -6,7 +6,7 @@ namespace Tarefando.Api.Business
     {
         public static void AddBusiness(this IServiceCollection services)
         {
-            services.AddTransient<MyTasks>();
+            services.AddTransient<TasksOnlyRead>();
             services.AddTransient<NewTask>();
             services.AddTransient<UpdateTask>();
         }
