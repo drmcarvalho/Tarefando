@@ -38,5 +38,11 @@ namespace Tarefando.Api.Database.Repositories
             var collection = _database.GetCollection<MyTask>(CollectionName);
             collection.Update(task.Id, task);            
         }
+
+        public int CountPending()
+        {
+            var collection = _database.GetCollection<MyTask>(CollectionName);
+            return collection.Query().Where(x => !x.IsCaceled && !x.IsCompleted).Count();
+        }
     }
 }

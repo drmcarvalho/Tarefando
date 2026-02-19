@@ -8,6 +8,7 @@ namespace Tarefando.Api.Database.Repositories.Interfaces
         IEnumerable<MyTask> Criteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null, ETaskType? taskType = null);
         void Create(MyTask task);
         MyTask? GetById(int id);
-        void Update(MyTask task);        
+        void Update(MyTask task);
+        int CountPending();
     }
 }

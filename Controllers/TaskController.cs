@@ -22,6 +22,13 @@ namespace Tarefando.Api.Controllers
             return Ok(resultTasks.ValueOrDefault);
         }
 
+        [HttpGet("count-pending")]
+        public IActionResult CountPendingTasks([FromServices] ListTasks listTasks, [FromQuery] bool noCache = false)
+        {
+            var result = listTasks.CountPendingTasks();
+            return Ok(result.ValueOrDefault);
+        }
+
         [HttpGet("{taskId}")]
         public IActionResult GetTaskById([FromServices] ListTasks listTasks, int taskId, [FromQuery] bool noCache = false)
         {

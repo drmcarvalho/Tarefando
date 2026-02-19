@@ -64,6 +64,9 @@ namespace Tarefando.Api.Business.TaskManager
             return Result.Ok(taskDto);
         }
 
+        public Result<int> CountPendingTasks()         
+            => Result.Ok(_taskRepository.CountPending());        
+
         public Result<IEnumerable<TaskGroupedByDayDto>> GroupedByDayCriteria(string? q = null, bool? isCanceled = null, bool? isCompleted = null, ETaskType? taskType = null, bool noCache = false)
         {
             var cacheKey = $"{nameof(ListTasks)}:{nameof(GroupedByDayCriteria)}:{q}:{isCanceled}:{isCompleted}:{taskType}";
